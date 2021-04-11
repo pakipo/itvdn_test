@@ -1,0 +1,46 @@
+* {
+    box-sizing: border-box;
+}
+
+p {
+    font-size: larger;
+}
+
+.authorInfo {
+    width: 60%;
+    padding-left: 20px;
+}
+
+.nav {
+    display: flex;
+    justify-content: start;
+}
+
+.container {
+    position: relative;
+}
+
+button {
+    margin-right: 10px;
+}
+
+.edit {
+    position: absolute;
+    width: 90%;
+    background-color: rgb(221, 237, 238);
+    top: 5%;
+    left: 5%;
+    padding: 5%;
+}
+
+@media (max-width: 720px){
+    .container {
+        width: 90vw;
+        margin: auto;}
+
+        button{
+            margin-top: 5px;
+        }
+ 
+       
+    }

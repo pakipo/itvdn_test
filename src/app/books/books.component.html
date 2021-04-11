@@ -1,0 +1,59 @@
+<div class="container" *ngIf="authorObj">
+    <h1>Книги {{authorObj['surname']}}</h1>
+    <div class="booksInfo bg-secondary text-white" *ngFor="let item of listBooks" [id]=item.title>
+        <p><b>Название:</b> {{item.title}}</p>
+        <p><b>Количество страниц:</b> {{item.pageCount}}</p>
+        <p><b>Жанр:</b> {{item.style}}</p>
+        <div class="btnCard">
+            <button class="btn btn-primary btn-lg" id='edit' (click)="editBook(item)"
+                [disabled]="buttonDisablad">Редактировать</button>
+            <button class="btn btn-danger btn-lg" id='remove' (click)="remove(item)" [disabled]="buttonDisablad">Удалить
+                книгу</button>
+        </div>
+    </div>
+    <div class="nav">
+        <button class="btn btn-primary btn-lg" (click)="goMain()" [disabled]="buttonDisablad">На главную</button>
+        <button class="btn btn-primary btn-lg" (click)="goAuthor()" [disabled]="buttonDisablad">К автору</button>
+        <button class="btn btn-primary btn-lg" (click)="createBook()" [disabled]="buttonDisablad">Добавить
+            книгу</button>
+    </div>
+
+    <!-- Форма редактирования -->
+    <div class="editBook" [style.display]="display">
+        <form novalidate [formGroup]="editBooksForm" (ngSubmit)="apply(editBooksForm)">
+            <div class="form-group">
+                <label for="title" class="form-label">Название: </label>
+                <input type="text" name="title" id="title" formControlName="title" class="form-control"
+                    [class.is-invalid]="editBooksForm.get('title').hasError('required') && editBooksForm.get('title').touched"
+                    [class.is-valid]="!editBooksForm.get('title').hasError('required')">
+                <div *ngIf="editBooksForm.get('title').hasError('required') && editBooksForm.get('title').touched"
+                    class="alert alert-danger">
+                    Обязательное поле.
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="pageCount" class="form-label">Количество страниц: </label>
+                <input type="number" name="pageCount" id="pageCount" formControlName="pageCount" class="form-control"
+                    [class.is-invalid]="editBooksForm.get('pageCount').hasError('required') && editBooksForm.get('pageCount').touched"
+                    [class.is-valid]="!editBooksForm.get('pageCount').hasError('required') && editBooksForm.get('pageCount').touched">
+                <div *ngIf="editBooksForm.get('pageCount').hasError('required')&& editBooksForm.get('pageCount').touched"
+                    class="alert alert-danger">
+                    Обязательное поле.
+                </div>
+            </div>
+
+            <div class="form-group">
+                <select class="form-control" [class.is-valid]='true' name="style" id="style" formControlName="style">
+
+                    <option *ngFor="let item of  styleBooks" [value]="item">{{item}}</option>
+                </select>
+            </div>
+            <div class="nav">
+                <button class="btn btn-primary btn-lg" (click)="cancel()">Отмена</button>
+                <button type="submit" class="btn btn-primary btn-lg"
+                    [disabled]="editBooksForm.invalid">Применить</button>
+            </div>
+        </form>
+    </div>
+</div>

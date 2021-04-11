@@ -1,0 +1,29 @@
+<div class="libraryWrap" (click)=hideSearch($event)>
+    <div class="search bg-dark">
+        <div class="inp">
+            <input type="text" class="form-control search" placeholder="Поиск по книгам" [(ngModel)]="inpSearch">
+        </div>
+        <div class="btn">
+            <button class="btn btn-primary btn-lg searchBtn" (click)="search()">искать</button>
+        </div>
+    </div>
+    <div class="searchRes bg-dark" *ngIf="searchActive">
+        <p (click)="goBook()">{{this.bookSerch}}</p>
+    </div>
+    <table class="table table-hover table-dark table-striped">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Автор</th>
+                <th> Книг в базе</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of showList; let i = index" (click)="goAuthor(item.id)">
+                <td>{{i+1}}</td>
+                <td>{{item.surname}} {{item.name[0].toUpperCase()}}.{{item.patronymic[0].toUpperCase()}}.</td>
+                <td>{{item. listBooks.length}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

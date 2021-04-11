@@ -1,0 +1,84 @@
+<div class="container">
+    <div class="authorInfo" *ngIf="author">
+        <p><b>Фамилия: </b> {{author.surname}}</p>
+        <p><b>Имя: </b> {{author.name}}</p>
+        <p><b>Отчество: </b> {{author.patronymic}}</p>
+        <p><b>Дата рождения: </b>{{author.birthDate}}</p>
+    </div>
+
+    <!-- Навигация -->
+
+    <div class="nav">
+        <button class="btn btn-primary btn-lg" (click)="goMain()">На главную</button>
+        <button class="btn btn-primary btn-lg" (click)="edit()">Редактировать</button>
+        <button class="btn btn-primary btn-lg" (click)="goBooks()">К книгам</button>
+    </div>
+
+    <!-- Форма редактирования -->
+
+    <div *ngIf="author" class="edit" [style.display]="display">
+
+        <form novalidate [formGroup]="editForm" (ngSubmit)="apply(editForm)">
+
+            <div class="form-group">
+                <label for="surname" class="form-label"c>Фамилия: </label>
+                <input name='surname' type="text" class="form-control"
+                    [class.is-invalid]="editForm.get('surname').hasError('required') || editForm.get('surname').hasError('minlength')"
+                    [class.is-valid]="!editForm.get('surname').hasError('required')&&!editForm.get('surname').hasError('minlength')"
+                    id="surname" formControlName="surname">
+                <div *ngIf="editForm.get('surname').hasError('required')" class="alert alert-danger">
+                    Обязательное поле.
+                </div>
+                <div *ngIf="editForm.get('surname').hasError('minlength')" class="alert alert-danger">
+                    Не менее 3 символов.
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="name" class="form-label">Имя: </label>
+                <input name='name' type="text" class="form-control" id="name" formControlName='name'
+                    [class.is-invalid]="editForm.get('name').hasError('required') || editForm.get('name').hasError('minlength')"
+                    [class.is-valid]="!editForm.get('name').hasError('required')&&!editForm.get('name').hasError('minlength')">
+                <div *ngIf="editForm.get('name').hasError('required')" class="alert alert-danger">
+                    Обязательное поле.
+                </div>
+                <div *ngIf="editForm.get('name').hasError('minlength')" class="alert alert-danger">
+                    Не менее 3 символов.
+                </div>
+            </div>
+
+            <div class="for-group">
+            <label for="patronymic" class="form-label">Отчество: </label>
+            <input name="patronymic" type="text" class="form-control" id="patronymic" formControlName="patronymic"
+            [class.is-invalid]="editForm.get('patronymic').hasError('pattern')"
+            [class.is-valid]="!editForm.get('patronymic').hasError('pattern')">
+            <div *ngIf="!editForm.get('patronymic').hasError('pattern')" class="text-success">
+               Не обязательное.
+            </div>
+            <div *ngIf="editForm.get('patronymic').hasError('pattern')" class="alert alert-danger">
+                Только символы.
+            </div>
+</div>
+
+<div class="form-group">
+            <label for="birthDate" class="form-label">Дата рождения: </label>
+            <input name="birthDate" type="text" class="form-control" id="birthDate" formControlName="birthDate"
+            [class.is-invalid]="editForm.get('birthDate').hasError('pattern')||editForm.get('birthDate').hasError('required')"
+            [class.is-valid]="!editForm.get('birthDate').hasError('pattern') && !editForm.get('birthDate').hasError('required')">
+            <div *ngIf="editForm.get('birthDate').hasError('pattern')" class="alert alert-danger">
+               Формат ввода дд.мм.гггг
+             </div>
+             <div *ngIf="editForm.get('birthDate').hasError('required')" class="alert alert-danger">
+                Обязательное поле.
+            </div>
+           
+</div>
+
+            <button class="btn btn-primary btn-lg" (click)="cancel()">Отмена</button>
+            <button type="submit" class="btn btn-primary btn-lg"
+            [disabled]="editForm.invalid">Применить</button>
+
+
+        </form>
+    </div>
+</div>

@@ -1,0 +1,50 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.libraryWrap {
+    width: 40%;
+}
+
+table {
+    width: 100%;
+}
+
+.searchBtn {
+    padding: 5px;
+    margin-left: 5px;
+}
+
+.table-hover {
+    cursor: pointer;
+}
+
+.search {
+    display: flex;
+    justify-content: space-between;
+    padding: 5%;
+}
+
+.inp {
+    width: 70%;
+}
+
+.searchRes :hover {
+    cursor: pointer;
+}
+
+.searchRes p {
+    width: 90%;
+    background-color: rgb(230, 220, 220);
+    text-align: center;
+    margin: auto;
+}
+
+@media (max-width: 720px) {
+    .libraryWrap {
+        width: 95vw;
+        margin: auto;
+    }
+}

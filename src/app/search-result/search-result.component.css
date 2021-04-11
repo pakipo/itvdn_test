@@ -1,0 +1,15 @@
+.container {
+   width: 70%;
+   position: relative;
+}
+
+.bookInfo {
+   margin-top: 2%;
+   padding: 5%;
+}
+
+.nav {
+   margin-top: 5%;
+   display: flex;
+   justify-content: space-around;
+}

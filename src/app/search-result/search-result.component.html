@@ -1,0 +1,12 @@
+<div class="container">
+    <div class="bookInfo bg-secondary text-white">
+        <p><b>Название: </b>{{book['title']}}</p>
+        <p><b>Количество страниц: </b>{{book.pageCount}}</p>
+        <p><b>Жанр: </b>{{book.style}}</p>
+    </div>
+    <div class="nav">
+        <button class="btn btn-primary btn-lg" (click)="goMain()">На главную</button>
+        <button class="btn btn-primary btn-lg" (click)="goAuthor()">К автору</button>
+        <button class="btn btn-primary btn-lg" (click)="goBooks()">Другие книги автора</button>
+    </div>
+</div>
