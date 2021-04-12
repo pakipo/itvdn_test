@@ -5,19 +5,20 @@
 }
 
 .libraryWrap {
-    width: 40%;
+    width: 60%;
+    position: relative;
 }
 
 table {
     width: 100%;
 }
 
-.searchBtn {
+button {
     padding: 5px;
     margin-left: 5px;
 }
 
-.table-hover {
+.hover {
     cursor: pointer;
 }
 
@@ -40,6 +41,21 @@ table {
     background-color: rgb(230, 220, 220);
     text-align: center;
     margin: auto;
+}
+.createBtn{
+    margin-top: 5%;
+}
+.create{
+    position: absolute;
+    width: 90%;
+    background-color: rgb(221, 237, 238);
+    top: 5%;
+    left: 5%;
+    padding: 5%;
+
+}
+.create button{
+    margin-top: 5%;
 }
 
 @media (max-width: 720px) {

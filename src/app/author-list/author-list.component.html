@@ -1,5 +1,102 @@
 <div class="libraryWrap" (click)=hideSearch($event)>
-    <div class="search bg-dark">
+
+    <!-- форма для создания нового автора  start -->
+    <div class="create" [style.display]="display">
+
+        <form novalidate [formGroup]="createForm" (ngSubmit)="apply(createForm)">
+
+            <div class="form-group">
+                <label for="surname" class="form-label" c>Фамилия: </label>
+                <input name='surname' type="text" class="form-control" id="surname" formControlName="surname"
+                [class.is-invalid]="createForm.get('surname').hasError('required')  && createForm.get('surname').touched"
+                [class.is-valid]="!createForm.get('surname').hasError('required')&&!createForm.get('surname').hasError('minlength')">
+                <div *ngIf="createForm.get('surname').hasError('required') && createForm.get('surname').touched" class="alert alert-danger">
+                    Обязательное поле.
+                </div>
+                <div *ngIf="createForm.get('surname').hasError('minlength')&& createForm.get('surname').touched" class="alert alert-danger">
+                    Не менее 3 символов.
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="name" class="form-label">Имя: </label>
+                <input name='name' type="text" class="form-control" id="name" formControlName='name'
+                    [class.is-invalid]="createForm.get('name').hasError('required') && createForm.get('name').touched"
+                    [class.is-valid]="!createForm.get('name').hasError('required')&& createForm.get('name').touched">
+                <div *ngIf="createForm.get('name').hasError('required')&& createForm.get('name').touched" class="alert alert-danger">
+                    Обязательное поле.
+                </div>
+                <div *ngIf="createForm.get('name').hasError('minlength')&& createForm.get('name').touched" class="alert alert-danger">
+                    Не менее 3 символов.
+                </div>
+            </div>
+
+            <div class="for-group">
+                <label for="patronymic" class="form-label">Отчество: </label>
+                <input name="patronymic" type="text" class="form-control" id="patronymic" formControlName="patronymic"
+                    [class.is-invalid]="createForm.get('patronymic').hasError('pattern')"
+                    [class.is-valid]="!createForm.get('patronymic').hasError('pattern')&& createForm.get('patronymic').touched">
+                <div *ngIf="!createForm.get('patronymic').hasError('pattern')" class="text-success">
+                    Не обязательное.
+                </div>
+                <div *ngIf="createForm.get('patronymic').hasError('pattern')" class="alert alert-danger">
+                    Только символы.
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="birthDate" class="form-label">Дата рождения: </label>
+                <input name="birthDate" type="text" class="form-control" id="birthDate" formControlName="birthDate"
+                [class.is-invalid]="(createForm.get('birthDate').hasError('pattern')||createForm.get('birthDate').hasError('required'))&& createForm.get('birthDate').touched"
+                [class.is-valid]="!createForm.get('birthDate').hasError('pattern') && !createForm.get('birthDate').hasError('required')">
+                <div *ngIf="createForm.get('birthDate').hasError('pattern')" class="alert alert-danger">
+                   Формат ввода дд.мм.гггг
+                 </div>
+                 <div *ngIf="createForm.get('birthDate').hasError('required')&& createForm.get('birthDate').touched" class="alert alert-danger">
+                    Обязательное поле.
+                </div>
+                </div>
+            <p>КНИГА: </p>
+            <div class="form-group">
+                <label for="title" class="form-label">Название: </label>
+                <input type="text" name="title" id="title" formControlName="title" class="form-control"
+                    [class.is-invalid]="createForm.get('title').hasError('required') && createForm.get('title').touched"
+                    [class.is-valid]="!createForm.get('title').hasError('required')">
+                <div *ngIf="createForm.get('title').hasError('required') && createForm.get('title').touched"
+                    class="alert alert-danger">
+                    Обязательное поле.
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="pageCount" class="form-label">Количество страниц: </label>
+                <input type="number" name="pageCount" id="pageCount" formControlName="pageCount" class="form-control"
+                    [class.is-invalid]="createForm.get('pageCount').hasError('required') && createForm.get('pageCount').touched"
+                    [class.is-valid]="!createForm.get('pageCount').hasError('required') && createForm.get('pageCount').touched">
+                <div *ngIf="createForm.get('pageCount').hasError('required')&& createForm.get('pageCount').touched"
+                    class="alert alert-danger">
+                    Обязательное поле.
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="style" class="form-label">Жаннр: </label>
+                <select class="form-control" [class.is-valid]='true' name="style" id="style" formControlName="style"
+                [class.is-invalid]="createForm.get('style').hasError('required') && createForm.get('style').touched"
+               >
+                    <option *ngFor="let item of  styleBooks" [value]="item">{{item}}</option>
+                </select>
+             
+            </div>
+            <button class="btn btn-primary btn-lg" (click)="cancel()">Отмена</button>
+            <button type="submit" class="btn btn-primary btn-lg"
+            [disabled]="createForm.invalid">Применить</button>
+        </form>
+    </div>
+
+    <!-- форма для создания нового автора end -->
+
+    <div class="search">
         <div class="inp">
             <input type="text" class="form-control search" placeholder="Поиск по книгам" [(ngModel)]="inpSearch">
         </div>
@@ -7,23 +104,29 @@
             <button class="btn btn-primary btn-lg searchBtn" (click)="search()">искать</button>
         </div>
     </div>
-    <div class="searchRes bg-dark" *ngIf="searchActive">
+    <div class="searchRes" *ngIf="searchActive">
         <p (click)="goBook()">{{this.bookSerch}}</p>
     </div>
-    <table class="table table-hover table-dark table-striped">
+    <table class="table table-hover  table-striped">
         <thead>
             <tr>
                 <th>#</th>
                 <th>Автор</th>
                 <th> Книг в базе</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let item of showList; let i = index" (click)="goAuthor(item.id)">
+            <tr *ngFor="let item of showList; let i = index">
                 <td>{{i+1}}</td>
-                <td>{{item.surname}} {{item.name[0].toUpperCase()}}.{{item.patronymic[0].toUpperCase()}}.</td>
+                <td (click)="goAuthor(item.id)" class="hover">{{item.surname}}
+                    {{item.name[0].toUpperCase()}}.{{item.patronymic[0].toUpperCase()}}.</td>
                 <td>{{item. listBooks.length}}</td>
+                <td><button class=" btn btn-danger" (click)="removeAuthor(item.id)">удалить автора</button></td>
             </tr>
         </tbody>
     </table>
+    <div class="createBtn">
+        <button class="btn btn-primary btn-lg" (click)="createAutor()">добавить автора</button>
+    </div>
 </div>

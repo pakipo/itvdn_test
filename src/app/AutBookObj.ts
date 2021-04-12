@@ -1,6 +1,5 @@
 export class AutBookObj{
    
-    id: number;
     surname: string;
     name: string;
     patronymic: string;

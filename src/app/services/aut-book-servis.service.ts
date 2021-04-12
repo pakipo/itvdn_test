@@ -60,4 +60,10 @@ export class AutBookServisService {
       })
     )
   }
+removeAuthor(id){
+  return this.http.delete(`/api/autBook/${id}`)
+}
+createAuthor(author){
+  return this.http.post(`/api/autBook`,author)
+}
 }

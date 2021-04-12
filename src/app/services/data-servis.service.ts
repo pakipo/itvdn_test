@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { InMemoryDbService } from 'angular-in-memory-web-api';
-import { from } from 'rxjs';
-import { AutBookObj } from '../index'
-import { Component } from '@angular/core';
+
 
 @Injectable({
   providedIn: 'root'
