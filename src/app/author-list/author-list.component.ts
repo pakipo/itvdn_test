@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AutBookServisService, AutBookObj} from '../index'
+import { AutBookServisService, AutBookObj, Book } from '../index'
 import { Router } from '@angular/router';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 
@@ -11,32 +11,41 @@ import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 export class AuthorListComponent implements OnInit {
 
   constructor(private servis: AutBookServisService,
-               private router: Router,
-               private fb: FormBuilder
-             ) { }
-  showList;
-
+    private router: Router,
+    private fb: FormBuilder
+  ) { }
+  // список всех авторов для отображения
+  showList: AutBookObj[];
   // отображение  результата поиска
   searchActive: boolean = false;
-  listBooks = [];
-  inpSearch;
-  searchResult;
-  bookSerchObj;
-  display = 'none';
-  styleBooks;
+  // список всех книг для организации поиска
+  listBooks: Book[] = [];
+  // Название книги введенное в поле поиска
+  inpSearch: string;
+
+  // объект найденой книги
+  bookSerchObj: Book;
+
+  display: string = 'none';
+  // жанры
+  styleBooks: string[];
   // содержание р поиска
-  bookSerch;
+  bookSerch: string;
   createForm: FormGroup;
-  newAuthor = new AutBookObj;
+  newAuthor: AutBookObj;
 
 
   ngOnInit(): void {
-    this.servis.getAutBook().subscribe(result => this.showList = result);
-    this.servis. getStyleBooks().subscribe(result => this.styleBooks = result['styleBooks']);
-    this.servis.getListBooks().subscribe(result => {
-      this.listBooks = result;
+    this.servis.getAutBook().subscribe(result => {
+      this.showList = result;
 
     });
+    this.styleBooks = this.servis.getStyleBooks();
+
+    this.servis.getListBooks().subscribe(result => {
+      this.listBooks = result;
+    });
+
     this.createForm = this.fb.group({
       surname: ['', [Validators.required]],
       name: ['', [Validators.required]],
@@ -44,7 +53,7 @@ export class AuthorListComponent implements OnInit {
       birthDate: ['', [Validators.required, Validators.pattern("[0-3][0-9]\.[0-1][0-9]\.[0-2][0-9][0-9][0-9]")]],
       title: ['', [Validators.required]],
       pageCount: ['', Validators.required],
-      style: ['',Validators.required]
+      style: ['', Validators.required]
     });
   }
 
@@ -57,14 +66,12 @@ export class AuthorListComponent implements OnInit {
   // поиск по названию книги
   search() {
     this.bookSerchObj = undefined;
-    this.listBooks.map(obj =>
-      obj.book.map(book => {
-        if (book.title === this.inpSearch) {
-
-          this.bookSerchObj = { id: obj['id'], book: book, surname: obj.surname }
-          this.bookSerch = book.title;
-        }
-      }));
+    this.listBooks.map(obj => {
+      if (obj.book.title === this.inpSearch) {
+        this.bookSerchObj = obj;
+        this.bookSerch = obj.book.title;
+      }
+    });
     this.searchActive = true;
     if (!this.bookSerchObj) {
       this.bookSerch = 'Ничего не найдено'
@@ -87,56 +94,57 @@ export class AuthorListComponent implements OnInit {
       this.searchActive = false;
     }
   }
-  removeAuthor(id){
+  removeAuthor(id) {
 
- // если активна подсказка поиска, при первом клике срыть в hideSearch()
- if (!this.searchActive) {
-   if(confirm('Вы уверены'))
-   this.servis.removeAuthor(id).subscribe(); 
-   this.ngOnInit();
+    // если активна подсказка поиска, при первом клике срыть в hideSearch()
+    if (!this.searchActive) {
+      if (confirm('Вы уверены'))
+        this.servis.removeAuthor(id).subscribe();
+      this.ngOnInit();
+    }
+
   }
-     
-}
- // форма для создания нового автора
- 
-createAutor(){
-if (!this.searchActive){
- 
-  this.display ='block';
-}
-}
+  // форма для создания нового автора
 
-apply(form){
+  createAutor() {
+    if (!this.searchActive) {
 
-this.newAuthor = {
-   
-  surname: form.get('surname').value,
-  name: form.get('name').value,
-  patronymic:  form.get('patronymic').value,
-  birthDate:form.get('birthDate').value,
-     listBooks : [ {
-      title: form.get('title').value,
-      pageCount: form.get('pageCount').value,
-      style: form.get('style').value
-  } ]
-}
-if(form.valid){
-this.servis.createAuthor(this.newAuthor).subscribe();}
-this.display = 'none';
-this.ngOnInit();
-}
+      this.display = 'block';
+    }
+  }
 
-cancel(){
-  this.createForm.controls.surname.setValue('');
-  this.createForm.controls.name.setValue('');
-  this.createForm.controls.patronymic.setValue('');
-  this.createForm.controls. birthDate.setValue('');
-  this.createForm.controls. title.setValue('');
-  this.createForm.controls. pageCount.setValue('');
-  this.createForm.controls.style.setValue('');
-  this.display = 'none';
- 
-}
+  apply(form) {
+
+    this.newAuthor = new AutBookObj(this.showList.length,
+      form.get('surname').value,
+      form.get('name').value,
+      form.get('patronymic').value,
+      form.get('birthDate').value,
+      {
+        title: form.get('title').value,
+        pageCount: form.get('pageCount').value,
+        style: form.get('style').value
+      })
+
+
+    if (form.valid) {
+      this.servis.createAuthor(this.newAuthor).subscribe();
+    }
+    this.display = 'none';
+     this.ngOnInit();
+  }
+
+  cancel() {
+    this.createForm.controls.surname.setValue('');
+    this.createForm.controls.name.setValue('');
+    this.createForm.controls.patronymic.setValue('');
+    this.createForm.controls.birthDate.setValue('');
+    this.createForm.controls.title.setValue('');
+    this.createForm.controls.pageCount.setValue('');
+    this.createForm.controls.style.setValue('');
+    this.display = 'none';
+
+  }
 
 
 }

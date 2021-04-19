@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, } from '@angular/router';
-import { AutBookServisService } from '../index'
+import { AutBookServisService,AutBookObj } from '../index'
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 @Component({
   selector: 'app-author',
@@ -9,9 +9,9 @@ import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 })
 export class AuthorComponent implements OnInit {
   editForm: FormGroup;
-  author;
-  id;
-  display = 'none';
+  author: AutBookObj;
+  id: number;
+  display:string = 'none';
   constructor(private router: Router,
     private actRoute: ActivatedRoute,
     private servis: AutBookServisService,
@@ -23,7 +23,7 @@ export class AuthorComponent implements OnInit {
 
     this.actRoute.params.subscribe(par => this.id = par['id']);
     this.servis.getAuthor(this.id).subscribe(result => {
-      this.author = result;
+      this.author = result as AutBookObj;
 
       // форма для редактирования
       this.editForm = this.fb.group({
@@ -62,7 +62,7 @@ export class AuthorComponent implements OnInit {
     this.author.birthDate = this.editForm.get('birthDate').value;
     this.author
     this.servis.editAuthor(this.author).subscribe(result => {
-      this.author = result;
+      this.author = result as AutBookObj;
     })
     this.display = 'none';
     this.ngOnInit();

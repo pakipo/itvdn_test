@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, } from '@angular/router';
-import { AutBookServisService } from '../index';
+import { AutBookServisService, AutBookObj,Book } from '../index';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { style } from '@angular/animations';
 @Component({
   selector: 'app-books',
   templateUrl: './books.component.html',
@@ -14,13 +15,13 @@ export class BooksComponent implements OnInit {
     private actRoute: ActivatedRoute,
     private fb: FormBuilder) { }
   editBooksForm: FormGroup;
-  authorObj;
-  styleBooks;
-  listBooks;
-  id;
-  display;
+  authorObj: AutBookObj;
+  styleBooks: string[];
+  listBooks:{title: string,pageCount:number,style:string}[];
+  id:number;
+  display: string;
   indexEditBook;
-  buttonDisablad = false;
+  buttonDisablad:boolean = false;
   // флаг для использования одной формы для создания и редактирования книг.
   formFlag: boolean;
 
@@ -28,12 +29,11 @@ export class BooksComponent implements OnInit {
     this.display = 'none';
     this.actRoute.params.subscribe(par => { this.id = par['id'] });
     this.servis.getAuthor(this.id).subscribe(result => {
-      this.authorObj = result;
-      this.listBooks = this.authorObj['listBooks']
+
+      this.authorObj = result as AutBookObj;
+      this.listBooks = this.authorObj['listBooks'];
     });
-    this.servis.getStyleBooks().subscribe(result => {
-      this.styleBooks = result['styleBooks']
-    });
+    this.styleBooks = this.servis.getStyleBooks();
 
     this.editBooksForm = this.fb.group({
       title: ['', [Validators.required]],
@@ -85,7 +85,7 @@ export class BooksComponent implements OnInit {
       this.display = 'none';
       this.buttonDisablad = false;
       this.servis.editAuthor(this.authorObj).subscribe(result => {
-        this.authorObj = result;
+        this.authorObj = result as AutBookObj;
       });
       this.ngOnInit();
 
@@ -99,7 +99,7 @@ export class BooksComponent implements OnInit {
       this.display = 'none';
       this.buttonDisablad = false;
       this.servis.editAuthor(this.authorObj).subscribe(result => {
-        this.authorObj = result;
+        this.authorObj = result as AutBookObj;
       });
       this.ngOnInit();
     }
@@ -126,7 +126,7 @@ export class BooksComponent implements OnInit {
       this.display = 'none';
       this.buttonDisablad = false;
       this.servis.editAuthor(this.authorObj).subscribe(result => {
-        this.authorObj = result;
+        this.authorObj = result as AutBookObj;
       });
       this.ngOnInit();
 

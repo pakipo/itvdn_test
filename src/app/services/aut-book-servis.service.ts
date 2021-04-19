@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import { map } from "rxjs/operators"
+import { map } from "rxjs/operators";
+import { Observable } from 'rxjs';
+import { AutBookObj, Book } from '../index';
 @Injectable({
   providedIn: 'root'
 })
@@ -9,27 +11,32 @@ export class AutBookServisService {
   constructor(private http: HttpClient) { }
 
   // список всех авторов
-  getAutBook() {
+  getAutBook(): Observable<AutBookObj[]> {
     return this.http.get("/api/autBook").pipe(
       map(response => {
-        let value = response as [];
-        let result = [];
+        let value = response as AutBookObj[];
+        let result: AutBookObj[] = [];
         value.forEach(element => {
-          if (!element['styleBooks']) {
-            result.push(element);
-          }
+          result.push(element);
         });
         return result;
       })
-    );;
+    );
   }
   // определенный автор
-  getAuthor(id) {
-    return this.http.get(`/api/autBook/${id}`)
+  getAuthor(id): Observable<AutBookObj> {
+    return this.http.get(`/api/autBook/${id}`).pipe(
+      map(res => {
+        let author = res as AutBookObj;
+        return author
+      }
+      )
+    )
   }
   // список жанров
+
   getStyleBooks() {
-    return this.http.get(`/api/autBook/0`);
+    return AutBookObj.styleBooks;
 
   }
 
@@ -48,22 +55,30 @@ export class AutBookServisService {
     return this.http.get(`/api/autBook`).pipe(
       map(res => {
 
-        let value = res as [];
-        let result = [];
-        value.forEach(obj => {
-          if (obj['id'] !== 0) {
-            result.push({ id: obj['id'], book: obj['listBooks'], surname: obj['surname'] });
+        let value = res as AutBookObj[];
+        let result: Book[] = [];
+        value.forEach((obj, index) => {
+
+
+          if (obj.listBooks) {
+
+            obj.listBooks.map(book => {
+              result.push(new Book(index, book, obj['surname'])
+              )
+            })
           }
         });
-
         return result;
       })
     )
   }
-removeAuthor(id){
-  return this.http.delete(`/api/autBook/${id}`)
-}
-createAuthor(author){
-  return this.http.post(`/api/autBook`,author)
-}
+
+  removeAuthor(id) {
+    return this.http.delete(`/api/autBook/${id}`)
+  }
+  createAuthor(author) {
+
+    return this.http.post(`/api/autBook`, author)
+
+  }
 }
